@@ -1,0 +1,57 @@
+AHX (Abyss Highest eXperience) Music Disk - Reloaded - (c) 2005 Raizor/PS2dev
+-----------------------------------------------------------------------------
+
+* This version contains many more songs than the old one *
+
+Please keep this readme.txt inside the archive.
+
+What the hell?
+--------------
+
+This is a little test application for my ps2 IOP version of Abyss AHX replayer. It contains 600+ different songs by a number of great AHX artists. I created this mainly to test the irx module functioned correctly, which it does :) 
+
+I'll be putting the source for the replayer (not this messy musicdisk) into CVS, it'll probably be there by the time you read this! 
+
+
+Controls:
+---------
+
+Firstly, you need a pad plugged into slot 1. I know I have a habit of leaving dodgy pad functions in my productions, but I think for once I can honestly say that this production would suck without a pad. So hopefully, Tyranid and Blackdroid will forgive me this time ;)
+
+Left and Right on the D-Pad cycle through the different artists.
+
+Up and Down on the D-Pad cycle through song by the selected artist.
+
+X plays currently highlighted song.
+
+
+Additional Notes:
+-----------------
+
+The AHX format has support for subsongs. This basically means that each song file (blah.ahx) could have one or more seperate songs within in. I've discovered that this feature has been quite badly abused (either by the AHX tracker authors *doubtful* or lazy bastard musicians *highly probable*). As a result of sloppiness, a lot of songs report to contain subsongs when they don't (grrrrr). Subsong support has, as a result of this, been totally removed from this production (the IRX supports it, but you'll need to listen to songs first to check if the numbers are correct).
+
+The C++ player code by Dexter/Abyss on which the IRX is based has built in support for oversampling. This samples sound and a larger scale than the player needs and then scales it down to the correct size for the replayer. In essence, oversampling gives the sound a smoother, more blended quality (is it me, or is this starting to sound like a coffee commercial?).  Oversampling on the IOP uses a lot of CPU power and a lot of songs will sound really nasty or slow down. As a result, oversampling is not included in this musicdisk. It's available in the IRX though... Besides, oversampling is evil and modern ;)
+
+Thanks:
+-------
+
+Emoon/TBL  - For fixed point magic on the filter generation code.
+NiK/Napalm - For converting the x86 asm white noise generator.
+LKZ        - FreeSD, Lots of explaining about SPU2.
+Adresd     - Motivation for all things PS2.
+MrBrown    - EE mapped IOP mem addresses.
+Pixel      - For PS2Packer which this is packed with.
+Sjeep      - For HDLo... err... SJPCM (nice reference)
+
+The authors who provided the tunes...
+
+..and Everyone in #PS2DEV
+
+
+  Ciao, Raizor (waving in a sawtooth fashion)
+
+
+
+
+
+
