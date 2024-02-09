@@ -1,0 +1,104 @@
+Note:
+-   long is defined as 64 bits
+-   default fp type is float (not double)
+-   double's are now the same as floats (since PS2 supports only float)
+-   ACC register is case sensitive !  (same for Q, P, R)
+-   float arguments end up in $f12, $f13, $f14, ...
+    To be sure your function comes out right, use objdump to read (compiler)
+    code that calls your function.
+
+    Generally, the compiler (at any -O# level it seems) tends to pack the
+    arguments as much as possible.  That means that float args will go into
+    $f12, $f13, and so on sequentially, and integer arguments will go into
+    $a0, $a1, and so on sequentially -- even interleaved.  Thus
+
+    void callhell(int a, float b, int c, float d, float e, int f) :
+
+    $a0 = a
+    $a1 = c
+    $a2 = f
+    $f12 = b
+    $f13 = d
+    $f14 = e
+
+-   for regular integer-style arguments, the first 4 are passed into $a0 thru $a3,
+    the rest are put into $t0 on up.
+
+-   functions return float values in $f0
+
+    example:
+
+    float ffn(int x) { return 1.0f; }   :
+
+    lui $2, 0x3f80
+    mtc0 $2, $f0
+    jr $31
+    nop
+
+-   modified (slightly) and compiled floatlib; included fptosi and fptoui
+    in fptoint.s, link in if you don't use libgcc.a (see below)
+
+-   fixed the problem with COP1 (FPU) causing crashes :
+    use syscall 60 to initialize thread (it must init FPU as well)
+    without this, random FPU instructions would crash the ps2
+    (cvt.w.s, mul.s seemed to be by far the most problematic)
+
+-   please don't link with libgcc.a, it contains really lousy routines to
+    convert from types and has a lot of other dead weight you don't need.
+
+
+-   for now, long's (64-bit integer) don't work in arithmetic
+    expression involving floats (due to lack of working libgcc).
+    ints should be fine for most things though, so it's not a priority right now
+
+-   figured out problem with floating point constants: often, these are
+    placed in the '.lit4' section, which is referenced through $gp.  $gp
+    is not initialized automatically (duh, i chose -no-startfiles !) so
+    i initialized it in 'initMainThread' along with the famous syscall.
+
+
+
+-   I am trying to write "formal" VU0 assembler since it's easy to read, but the assembler
+    accepts registers without field names since they are given in the instruction.
+
+
+-   Do not use global variables in arithmetic expressions to calculate the values of other
+    global variables.  This creates a stupid 'global constructor' which will call functions
+    in libgcc  EVEN WHEN YOU SPECIFY not to use builtin stuff on commandline.
+    A good way around this problem is to make a '#define' version of each of your constants
+    like 'const float cPI = 3.14' '#define PI 3.14'.
+
+-   Damn compiler will create some constructor that relies on libgcc even when initializing a
+    struct inside a function.  Must do manual assignments in that case (ugh).
+
+-   One of the great optimizations you can do to speed the whole process of drawing
+    (transformations and rendering) is to use triangle strips.  Cut down # of vertices
+    to be transformed by a factor of 3, reduce bus bandwidth, and get faster rendering!
+
+-   Remember that the EE-core has 2 full pipelines.  If you really want to roll out good asm,
+    no Read-After-Writes and don't use the same computation unit in adjacent instructions !
+    (refer to ps2-silicon.pdf)
+    Since COP2 instructions are on the list, you could potentially interleave standard CPU
+    instructions with COP2 instructions!
+
+-   The GS accepts only unsigned values, make sure to translate all points onto the correct side
+    of the z-buffer and within the window coordinates (negative coords turn into very positive
+    coords that cover the screen with fat polygons).
+
+
+-   If you want to pack your own data (like vertex-normals) into arrays of colors, points, etc.
+    to send to the GS, one way to skip the data is to use a 'nop' (0xf) in the GIFtag.  However,
+    I'm not sure whether it actually sends it and ignores it (waste of bandwidth) or really does
+    no operation (including no load of memory).  I tend towards the latter (or at least hope so).
+
+
+
+
+-   decided that for my COP2 code, vf24 -> vf31 will be preserved across function calls, the rest
+    are free to use
+
+-   do not use vu registers serially, they have serious latency.  only ACC has no latency
+    unrolling the loop for 'vectoints' caused a huge improvement in early stages of development
+
+
+

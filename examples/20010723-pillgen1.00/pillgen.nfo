@@ -1,0 +1,73 @@
+Pillgen v1.0
+by Vzzrzzn (or Vzzrzzf ... depends on my mood)
+
+
+
+Introduction:
+
+Finally, I get something out the "door".  This program uses only the EE-core + COP2 (VU0)
+to output in excess of 3.2 Million Triangles / Second.  This figure is derived from:
+
+1138 triangles / object * 47 objects * 60 frames / second.
+
+Additionally, the triangles are gouraud shaded, with vertex "z-lighting" (OK that was
+a fast hack) and full matrix transformation (rotation and translation) using COP2.
+
+To achieve this speed, a single triangle strip was generated for each pill.  This cut
+down on the number of vertices that needed transformation and lighting, and cut down
+on Bus bandwidth.
+
+A graphics mode of 512x384 was used; I am not aware of any other program using
+such a resolution.  This is very convenient since 2 framebuffers of 512x384x32bpp
++ 1 zbuffer of 512x384x16bpp adds up to 0x1e0000 bytes, leaving ~ 2MB free for
+textures and other trickery.
+
+
+
+Features + Things to Play With:
+
+-   You will notice that there is a white square oscillating on the top of the screen.  This
+    is there to measure the frame rate.  Take a stopwatch, and measure how long it takes to
+    make a full-roundtrip to the left side of the screen.  If at full framerate, this will
+    take 4 seconds; if it takes longer (like 4.5) then there are a few frames of lag.
+
+    If running at 60Hz, then 4.5 secs means framerate dropped to 60 * 4 / 4.5 = 53 fps.
+
+-   In the code, (integer) FPD controls the framerate.  If you reduce the framerate to 30Hz
+    with FPD = 2, then you can draw twice as many objects on the screen (by setting NUMPARTS).
+    You will notice that some things don't look as good (such as the oscillating square)
+    with a lower framerate.
+
+    View the difference between "pillgen-30fps-ntsc.elf" and "pillgen-60fps-ntsc.elf" to see.
+
+
+-   For the following line of code (~ line 110):
+
+    smlpillvtl->giftag[0]  =   0x3006400000008000 + (smlpillvtl->numv / 3);
+
+    Change  0x3006400000008000  to  0x3005400000008000  for gouraud shaded wireframe
+                                to  0x3002400000008000  for flat shaded triangles
+                                to  0x3001400000008000  for flat shaded wireframe
+
+
+
+
+
+
+Closing Remarks:
+
+Read "ctest.nfo" to follow some of my progress with PS2.  I have compiled the Cephes math library
+(wow that's some fast math routines), it is included in this release.
+
+If by some chance you try to compile this code for yourself, only to find the ee-gcc crashes, then
+you need to find a decent version of it.  It should work just by typing 'make', if not then fix
+the Makefile to contain the correct name of your compiler executables.
+
+And ... I chose a pill because it can elegantly be described using a single triangle strip, NOT
+because I am a druggie.  Or maybe PS2 is my drug of choice ?
+
+Definitely expect more in the future.
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
