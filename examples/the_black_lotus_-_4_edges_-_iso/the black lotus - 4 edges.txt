@@ -1,0 +1,48 @@
+               4 edges by The Black Lotus for Playstation 2.
+
+Full Credits:
+
+emoon:
+
+Main coding, engine coding, effects, converter tools, system coding and camera work.
+
+Chip:
+
+System coding, FFT generator, SH renderer (did not make it to the demo) and cdversion.
+
+Nico:
+
+Landscape graphics.
+
+Louie500:
+
+The rest of all graphics.
+
+Little Bitchard:
+
+Kick ass music.
+
+----------------------------------------------------------------------
+
+Hardware required: Playstation 2 compatible hardware able to boot
+homebrew CDs.
+
+NTSC capable display.
+
+Notice that this demo is only released as an ISO image for now as there
+are some problems streaming the music over host with ps2link. When
+these issues are resolved an host version will be released.
+
+----------------------------------------------------------------------
+
+I wanted to release a demo for Playstation 2 for quite some time now
+and finally its here.
+
+I would like to thank all people that helped me during the years in
+#ps2dev esp Sparky for dot3 stuff (will be included next time ;) and
+lots of other help with filters for the ps2.
+jbit for fixing and helping out with the adpcm music playing and the
+rest of the #ps2dev people: Neov, Oobles, Tyr, Boomint, adresd, Gillian
+Raizor, Nagra, gorim and the rest I forgot.
+
+-emoon
